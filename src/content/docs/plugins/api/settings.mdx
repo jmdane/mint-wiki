@@ -1,0 +1,163 @@
+---
+title: Settings
+description: Docs for Settings
+---
+
+import {Code} from "astro/components";
+
+These are the settings that can be used to configure the plugin.
+You will be able to click on the gear button in the plugin list to access these settings in the GUI.
+These settings will be saved with your normal Mint Client settings and will be loaded when the
+plugin is loaded.
+
+## Important about settings
+
+Settings are located in the `com.originmint.plugin.settings` package.
+Settings can only be used as a field in the class where `IPlugin` is implemented.
+
+---
+
+## Boolean
+
+A boolean setting can be either true or false. This is imported from `com.originmint.plugin.settings.Boolean`.
+
+<Code frame="code" type={"code"} lang="java" title={"boolean-example.java"} code={`Boolean booleanExample = new Boolean("id", "Example", "Description", false);`}/>
+
+And this is how you can use it in your plugin via the `.value` property:
+
+<Code type={"code"} lang="java" title={"boolean-example.java"} code={`if (booleanExample.value) {
+    // Do something
+}`}/>
+
+---
+
+## Number
+
+A number is an integer setting. This is imported from `com.originmint.plugin.settings.Number`.
+
+<Code type={"code"} lang="java" title={"number-example.java"} code={`Number numberExample = new Number("id", "Example", "Description", 5);`}/>
+
+And this is how you can use it in your plugin via the `.value` property:
+
+<Code type={"code"} lang="java" title={"number-example.java"} code={`if (numberExample.value > 5) {
+    // Do something
+}`}/>
+
+---
+
+## Integer Slider
+
+An integer slider is a setting that can be set with a slider in the GUI.
+This is imported from `com.originmint.plugin.settings.IntSlider`.
+
+<Code type={"code"} lang="java" title={"int-slider-example.java"} code={`IntSlider intSliderExample = new IntSlider("id", "Example", "Description", 0, 15, 5);`}/>
+
+And this is how you can use it in your plugin via the `.value` property:
+
+<Code type={"code"} lang="java" title={"int-slider-example.java"} code={`if (intSliderExample.value > 5) {
+    // Do something
+}`}/>
+
+---
+
+## Float Slider
+
+A float slider is a setting that can be set with a slider in the GUI.
+This is imported from `com.originmint.plugin.settings.FloatSlider`.
+
+<Code type={"code"} lang={"java"} title={"float-slider-example.java"} code={`FloatSlider floatSliderExample = new FloatSlider("id", "Example", "Description", 0.0f, 1.0f, 0.5f);`}/>
+
+And this is how you can use it in your plugin via the `.value` property:
+
+<Code type={"code"} lang={"java"} title={"float-slider-example.java"} code={`if (floatSliderExample.value > 0.5f) {
+    // Do something
+}`}/>
+
+---
+
+## String / Text
+
+A string setting is a setting that can be set with a text field in the GUI.
+This is imported from `com.originmint.plugin.settings.Text`.
+
+<Code type={"code"} lang={"java"} title={"text-example.java"} code={`Text textExample = new Text("id", "Example", "Description", "Default Value");`}/>
+
+And this is how you can use it in your plugin via the `.value` property:
+
+<Code type={"code"} lang={"java"} title={"text-example.java"} code={`if (textExample.value.equals("Default Value")) {
+    // Do something
+}`}/>
+
+---
+
+## String / Text List
+
+A string list setting is a setting that can be set with a text field in the GUI.
+This is mostly used to be edited in the GUI as a list of strings.
+This is imported from `com.originmint.plugin.settings.TextList`.
+
+<Code type={"code"} lang={"java"} title={"text-list-example.java"} code={`TextList textListExample = new TextList("id", "Example", "Description", new ArrayList<>());`}/>
+
+And this is how you can use it in your plugin via the `.value` property:
+
+<Code type={"code"} lang={"java"} title={"text-list-example.java"} code={`if (textListExample.value.contains("Example")) {
+    // Do something
+}`}/>
+
+---
+
+## Coords
+
+A coords setting is a setting that can be set with a text field in the GUI.
+It contains 3 float values for x, y, and z.
+This is imported from `com.originmint.plugin.settings.Coords`.
+
+<Code type={"code"} lang={"java"} title={"coords-example.java"} code={`Coords coordsExample = new Coords("id", "Example", "Description", 0.0f, 0.0f, 0.0f);`}/>
+
+And this is how you can use it in your plugin via the `.x`, `.y`, and `.z` properties:
+
+<Code type={"code"} lang={"java"} title={"coords-example.java"} code={`if (coordsExample.x > 0.0f) {
+    // Do something
+}`}/>
+
+---
+
+## Coords List
+
+A coords list setting is a setting that can be set with a text field in the GUI.
+This is mostly used to be edited in the GUI as a list of coords.
+This is imported from `com.originmint.plugin.settings.CoordsList`.
+
+<Code type={"code"} lang={"java"} title={"coords-list-example.java"} code={`CoordsList coordsListExample = new CoordsList("id", "Example", "Description", new ArrayList<>());`}/>
+
+The positions field is a list of `Pos` objects with x, y, and z properties:
+
+<Code type={"code"} lang={"java"} title={"coords-list-example.java"} code={`public class CoordsList$Pos {
+    public int x;
+    public int y;
+    public int z;
+
+    public CoordsList$Pos(int x, int y, int z) {
+    this.x = x;
+    this.y = y;
+    this.z = z;
+    }
+}`}/>
+
+You can define and create a new `Pos` object like this:
+
+<Code type={"code"} lang={"java"} title={"coords-list-example.java"} code={`CoordsList.Pos pos = new CoordsList.Pos(0, 0, 0);`}/>
+
+And this is how you can use it in your plugin via the `.positions` property:
+
+<Code type={"code"} lang={"java"} title={"coords-list-example.java"} code={`if (coordsListExample.positions.get(0).x > 0.0f) {
+    // Do something
+}`}/>
+
+or you can loop through the list:
+
+<Code type={"code"} lang={"java"} title={"coords-list-example.java"} code={`for (CoordsList.Pos pos : coordsListExample.positions) {
+    if (pos.x > 0.0f) {
+        // Do something
+    }
+}`}/>

@@ -1,0 +1,269 @@
+---
+title: Events
+description: Docs for Events
+---
+
+import {Code} from "astro/components";
+
+export const highlights = ["ClientTickEvent"];
+
+Events are a way to listen to specific actions that happen in the game.
+They are used to trigger specific actions when something happens in the game.
+
+---
+## Listening to events
+
+To listen to an event, you need to register a listener for that event.
+This is done by registering an object with the PluginManager Event Bus.
+It is recommended to do this in the `onEnable` method of your plugin.
+And unregister the listener in the `onDisable` method in the entrypoint of
+your plugin that inherits from `IPlugin`.
+
+<Code type={"code"} lang={"java"} title={"event-listener.java"} code={`@Override
+public void onEnable() {
+    PluginManager.getInstance().getEventBus().register(this);
+}
+
+@Override
+public void onDisable() {
+    PluginManager.getInstance().getEventBus().unregister(this);
+}`}/>
+
+The way event listening works is that the listener class has methods that are annotated with `@Subscribe`.
+And the parameter of the method is the event class that you want to listen to.
+
+<Code type={"code"} lang={"java"} title={"event-listener.java"} code={`
+@Subscribe
+public void OnEvent(EventClassHere event) {
+    // Do something
+}`}/>
+
+Remember to replace `EventClassHere` with the event class you want to listen to.
+
+---
+
+## ClientTickEvent
+
+The `ClientTickEvent` is an event that is fired every tick of the client.
+This event is useful for doing things that need to be done every tick.
+It is located in the `com.originmint.plugin.events.ClientTickEvent` class.
+
+<Code type={"code"} lang={"java"} title={"client-tick-event.java"} code={`@Subscribe
+public void onClientTick(ClientTickEvent event) {
+    // Do something every tick
+}`}/>
+
+It has two phases:
+- `PRE`: Fired at the beginning of the tick.
+- `POST`: Fired at the end of the tick.
+
+<Code type={"code"} lang={"java"} title={"client-tick-event.java"} code={`@Subscribe
+    public void onClientTick(ClientTickEvent event) {
+        if (event.phase == ClientTickEvent.Phase.PRE) {
+            // Do something at the beginning of the tick
+        } else if (event.phase == ClientTickEvent.Phase.POST) {
+            // Do something at the end of the tick
+        }
+    }`}/>
+
+---
+
+## KeyInputEvent
+
+The `KeyInputEvent` is an event that is fired when a key is pressed or released.
+This event is useful for listening to key presses.
+It is located in the `com.originmint.plugin.events.KeyInputEvent` class.
+This is for any key and does not contain the key code of the key that was pressed.
+
+<Code type={"code"} lang={"java"} title={"key-input-event.java"} code={`
+KeyBinding keyBinding = new KeyBinding("key", 54, "category");
+
+@Subscribe
+public void onKeyInput(KeyInputEvent event) {
+    // Any Key was pressed or released
+    if(keyBinding.isPressed()) {
+        // Do something, RSHIFT was pressed
+    }
+}`}/>
+
+---
+
+## RenderTickEvent
+
+The `RenderTickEvent` is an event that is fired every tick of the render loop.
+This event is useful for doing things that need to be done every render tick.
+It is located in the `com.originmint.plugin.events.RenderTickEvent` class.
+It also has multiple types:
+- `PRE`: Fired at the beginning of the render tick.
+- `GUI`: Fired when the GUI is rendered.
+- `OVERLAY`: Fired when the overlay is rendered.
+- `WORLD`: Fired when the world is rendered.
+- `POST`: Fired at the end of the render tick.
+
+This can be useful to render something as a GUI, or something in the world such as tracers or esp.
+
+<Code type={"code"} lang={"java"} title={"render-tick-event.java"} code={`
+@Subscribe
+public void onRenderTick(RenderTickEvent event) {
+    if (event.type == RenderTickEvent.Type.PRE) {
+        // Do something at the beginning of the render tick
+    } else if (event.type == RenderTickEvent.Type.POST) {
+        // Do something at the end of the render tick
+    } else if (event.type == RenderTickEvent.Type.GUI) {
+        // Do something when the GUI is rendered
+    } else if (event.type == RenderTickEvent.Type.OVERLAY) {
+        // Do something when the overlay is rendered
+    } else if (event.type == RenderTickEvent.Type.WORLD) {
+        // Do something when the world is rendered
+    }
+}`}/>
+
+---
+
+## Packet Event
+
+Listening to packets is different than other events, it is using the vanilla packet classes
+located at `net.minecraft.network.play.client` and `net.minecraft.network.play.server`.
+This is useful for listening to packets that are sent or received by the client.
+You also have to have two parameters in the method, the packet class you want to listen to
+and the `PacketCallback` class located at `com.originmint.plugin.events.PacketCallback`.
+The packet callback is used to cancel the packet if needed.
+
+<Code type={"code"} lang={"java"} title={"packet-event.java"} code={`
+@Subscribe
+public void onPacket(Packet<?> packet, PacketCallback callback) {
+    // Listen to all packets
+}`}/>
+
+You can also listen to specific packets by specifying the class, for example listening to chat.
+
+<Code type={"code"} lang={"java"} title={"packet-event.java"} code={`
+@Subscribe
+public void onPacket(S02PacketChat packet, PacketCallback callback) {
+    // Listen to chat packets
+    // Cancel received chat packets
+    callback.cancel();
+}`}/>
+
+---
+
+## ReplayEvent
+
+The `ReplayEvent` is an event that is fired when a replay is started, stopped or paused.
+This is a custom event that is fired by the replay system.
+It is located in the `com.originmint.plugin.events.ReplayEvent` class.
+
+The different types of the replay event are:
+- `START`: Fired when the replay starts.
+- `STOP`: Fired when the replay stops.
+- `PAUSE`: Fired when the replay is paused.
+- `RESUME`: Fired when the replay is resumed.
+- `FINISH`: Fired when the replay finishes.
+
+It also has two phases:
+- `PRE`: Fired at the beginning of the replay event.
+- `POST`: Fired at the end of the replay event.
+
+This can be useful to do something when the replay starts, stops, or pauses.
+And you can also cancel starting, stopping, or pausing the replay.
+
+<Code type={"code"} lang={"java"} title={"replay-event.java"} code={`
+@Subscribe
+public void onReplay(ReplayEvent event) {
+    if (event.type == ReplayEvent.Type.START) {
+        // Do something when the replay starts
+    } else if (event.type == ReplayEvent.Type.STOP) {
+        // Do something when the replay stops
+    } else if (event.type == ReplayEvent.Type.PAUSE) {
+        // Do something when the replay is paused
+    } else if (event.type == ReplayEvent.Type.RESUME) {
+        // Do something when the replay is resumed
+    } else if (event.type == ReplayEvent.Type.FINISH) {
+        // Do something when the replay finishes
+    }
+}`}/>
+
+Example of cancelling the replay start:
+
+<Code type={"code"} lang={"java"} title={"replay-event.java"} code={`
+@Subscribe
+public void onReplay(ReplayEvent event) {
+    if (event.type == ReplayEvent.Type.START && event.phase == ReplayEvent.Phase.PRE) {
+        // Cancel starting the replay
+        event.cancelEvent();
+    }
+}`}/>
+
+---
+
+## SyncEvent
+
+The `SyncEvent` is an event that is fired when the replay goes out of sync.
+This is a custom event that is fired by the replay system.
+It is located in the `com.originmint.plugin.events.SyncEvent` class.
+This can be used to do something when the replay goes out of sync.
+Or cancel the replay from going out of sync.
+
+There are different types of the sync event:
+- `CAMERA`: Fired when the camera goes out of sync.
+- `POSITION`: Fired when the position goes out of sync.
+- `LOCK_POSITION`: Fired when the client gets moved by the server.
+- `INVENTORY`: Fired when the inventory goes out of sync.
+- `INVENTORY_ERROR`: Fired when an error occurs with the inventory.
+- `INVENTORY_OPEN`: Fired when the inventory is opened.
+- `INVENTORY_OPEN_CONTAINER`: Fired when the container is opened.
+- `INVENTORY_HOTBAR`: Fired when the hotbar goes out of sync.
+- `INVENTORY_SLOT`: Fired when a slot goes out of sync.
+- `INVENTORY_ARMOR`: Fired when the armor goes out of sync.
+
+It also has two phases:
+- `PRE`: Fired at the beginning of the sync event.
+- `POST`: Fired at the end of the sync event.
+
+<Code type={"code"} lang={"java"} title={"sync-event.java"} code={`
+@Subscribe
+public void onSync(SyncEvent event) {
+    if (event.type == SyncEvent.Type.CAMERA) {
+        // Do something when the camera goes out of sync
+    } else if (event.type == SyncEvent.Type.POSITION) {
+        // Do something when the position goes out of sync
+    } else if (event.type == SyncEvent.Type.LOCK_POSITION) {
+        // Do something when the client gets moved by the server
+    } else if (event.type == SyncEvent.Type.INVENTORY) {
+        // Do something when the inventory goes out of sync
+    } else if (event.type == SyncEvent.Type.INVENTORY_ERROR) {
+        // Do something when an error occurs with the inventory
+    } else if (event.type == SyncEvent.Type.INVENTORY_OPEN) {
+        // Do something when the inventory is opened
+    } else if (event.type == SyncEvent.Type.INVENTORY_OPEN_CONTAINER) {
+        // Do something when the container is opened
+    } else if (event.type == SyncEvent.Type.INVENTORY_HOTBAR) {
+        // Do something when the hotbar goes out of sync
+    } else if (event.type == SyncEvent.Type.INVENTORY_SLOT) {
+        // Do something when a slot goes out of sync
+    } else if (event.type == SyncEvent.Type.INVENTORY_ARMOR) {
+        // Do something when the armor goes out of sync
+    }
+}`}/>
+
+Example of cancelling the camera going out of sync:
+
+<Code type={"code"} lang={"java"} title={"sync-event.java"} code={`
+@Subscribe
+public void onSync(SyncEvent event) {
+    if (event.type == SyncEvent.Type.CAMERA && event.phase == SyncEvent.Phase.PRE) {
+        // Cancel the camera from going out of sync
+        event.cancelEvent();
+    }
+}`}/>
+
+This will keep calling every tick until the camera is back in sync. So you have to keep
+that in mind when cancelling the event.
+
+
+
+
+
+
+
+

@@ -1,0 +1,6 @@
+id: 559dabf2-42e5-4979-b978-9e597340f781 # Do not edit this line
+name: OutOfSyncDelay
+description: Keeps playing replay after out of sync for a few seconds
+public: true # Do not edit this line
+private: false  # This is if you want the plugin to be unlisted or private
+mcVersion: 1.8.9 # Do not edit this line

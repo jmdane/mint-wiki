@@ -1,0 +1,35 @@
+---
+title: Replay Manager
+description: Docs for Replay Manager
+---
+
+import {Code} from "astro/components";
+
+This is the documentation for the Replay Manager.
+It is used to manage replays in the Mint Client.
+Either playing or stopping a replay.
+
+The `ReplayManager` is a class that is used to manage replays in the Mint Client.
+It is located in the `com.originmint.managers.ReplayManager` class.
+
+The `ReplayManager` has the following methods:
+- `startPlaying`: Starts the replay with the ID provided.
+- `stopPlaying`: Stops the current replay.
+- `pausePlaying`: Pauses the current replay.
+- `resumePlaying`: Resumes the current replay.
+- `outOfSync`: Called when the replay goes out of sync. You can use this
+to simulate the replay going out of sync.
+- `isPlaying`: Returns if the replay is currently playing.
+- `getInstance`: Returns the instance of the `ReplayManager`.
+
+This can be useful to start, stop, pause, or resume the replay.
+
+<Code type={"code"} lang={"java"} title={"replay-manager.java"} code={`ReplayManager.getInstance().startPlaying("replay-id");
+ReplayManager.getInstance().stopPlaying();
+ReplayManager.getInstance().pausePlaying();
+ReplayManager.getInstance().resumePlaying();
+ReplayManager.getInstance().outOfSync();
+if (ReplayManager.getInstance().isPlaying()) {
+    // Do something
+}
+`}/>

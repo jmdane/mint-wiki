@@ -1,0 +1,168 @@
+---
+title: Creating a Plugin
+description: A guide on how to create your first plugin using the Mint CLI.
+---
+
+import {Code} from "astro/components";
+import {Aside, FileTree} from '@astrojs/starlight/components';
+import importedCodeExample from '../../../example.java?raw';
+import importedCodeYaml from '../../../plugin.yaml?raw';
+
+This guide will walk you through creating your first plugin using the Mint CLI.
+We'll cover the entire process from setting up the plugin structure to
+uploading it for use in Mint Client.
+
+---
+
+## Prerequisites
+
+Before starting, ensure that you have completed the following steps:
+- Installed the `mint-cli`.
+- Downloaded the necessary libraries.
+- Authenticated your `api_key.txt` file.
+
+If you haven't done this yet, please refer to the [installation guide](/plugins/install-cli).
+
+---
+
+## Step 1: Creating a New Plugin
+
+To create a new plugin, run the following command in your terminal:
+
+```bash
+mint-cli plugin create-empty --output <output-folder> --version <1.8.9 | 1.18.2 | 1.20.6>
+```
+
+In this example, we'll replace `<output-folder>` with `my-first-plugin`
+and set the `<version>` to `1.8.9`:
+
+```bash
+mint-cli plugin create-empty --output my-first-plugin --version 1.8.9
+```
+
+This command creates a new plugin in the `plugins/` directory,
+generating the following folder structure:
+
+<FileTree>
+    - my-first-plugin/
+        - .vscode/
+            - settings.json
+            - my-first-plugin.code-workspace
+        - src/
+            - com/
+                - example/
+                    - Example.java
+        - plugin.yaml
+</FileTree>
+
+---
+
+## Step 2: Importing the Project into Your IDE
+
+To work on your plugin with full IntelliSense and debugging support,
+import the project into Visual Studio Code (VS Code):
+
+1. Open **Visual Studio Code**.
+2. From the **File** menu, select **Open Workspace from File...**.
+3. Navigate to the `my-first-plugin` folder.
+4. Select the `my-first-plugin.code-workspace` file from the `.vscode/` folder.
+5. Click **Open** to load the project.
+
+This will configure VS Code with the necessary settings and workspace for your plugin.
+
+---
+
+## Step 3: Editing the Plugin
+
+Now that your project is open in VS Code, you can begin editing the plugin.
+The main file you’ll work with is `Example.java` located in the `src/com/example/`
+directory.
+
+### Entry Point of a Plugin
+
+Every plugin requires an entry point, which is a class that implements the `IPlugin`
+interface. This interface includes two key methods:
+- `onEnable`: This is called when the plugin is enabled.
+- `onDisable`: This is called when the plugin is disabled.
+
+You can only have one class in your plugin that implements the `IPlugin` interface.
+
+<Code type={"code"} lang="java" title={"Example.java"} code={importedCodeExample}/>
+
+In the provided example, the plugin registers and unregisters a client tick listener,
+printing "ClientTickEvent" on every tick.
+
+Feel free to modify this file to fit the behavior you want your plugin to have.
+You can also create additional Java classes and packages as needed for more
+complex functionality.
+
+---
+
+## Step 4: Configuring the Plugin
+
+The `plugin.yaml` file contains important metadata about your plugin,
+including its name, description, version, and visibility.
+
+### Key Fields in `plugin.yaml`:
+- **id**: Automatically generated when you upload the plugin (leave it blank initially).
+- **public**: Controls the visibility of the plugin.
+- **version**: Automatically updated; do not manually change this.
+
+<Code type={"code"} lang="yaml" title={"plugin.yaml"} code={importedCodeYaml}/>
+
+You shouldn't edit the `id`, `public`, or `version` fields.
+The `id` field will remain `null` until the plugin is uploaded.
+
+---
+
+## Step 5: Uploading the Plugin
+
+Once your plugin is ready, upload it to the Mint Client by running the following command:
+
+```bash
+mint-cli plugin upload --folder <folder>
+```
+
+In this case, replace `<folder>` with the name of your plugin folder, e.g., `my-first-plugin`:
+
+```bash
+mint-cli plugin upload --folder my-first-plugin
+```
+
+### Troubleshooting Uploads:
+- If the upload fails, the CLI will provide error messages indicating what needs
+to be fixed (such as code errors or configuration issues).
+- If the upload succeeds, you'll receive a confirmation message with the plugin's ID.
+
+---
+
+## Step 6: Using the Plugin In-Game
+
+Once the plugin is uploaded, you can use it in the Mint Client. Here's how:
+
+1. Open the Mint Client and navigate to the **Plugins** tab.
+2. Your plugin will be listed there. If it's not visible, click the **Refresh**
+button to reload all plugins (this will also disable and unload currently running plugins).
+3. After refreshing, you will see your plugin. Click the **Download** button to
+load it into the game.
+4. From there, you can enable and disable the plugin as needed using
+the Mint Client GUI.
+
+<Aside type="danger">
+    Be cautious when running plugins from unknown sources.
+    Plugins can execute code on your computer,
+    and malicious plugins can compromise your security. Only run code you trust.
+</Aside>
+
+---
+
+## Summary
+
+By following these steps, you've learned how to create,
+configure, and upload a basic plugin using the Mint CLI.
+With this foundation, you're ready to start building
+more complex plugins and exploring the full capabilities
+of the Mint Client. Always remember to test your plugins
+thoroughly and manage their configuration carefully in
+the `plugin.yaml` file.
+

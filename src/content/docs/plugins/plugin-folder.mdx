@@ -1,0 +1,98 @@
+---
+title: Plugins Folder Structure
+description: A comprehensive guide to the structure of the plugins folder in the Mint CLI.
+---
+
+import { FileTree } from '@astrojs/starlight/components';
+
+The folder structure of the plugins folder is designed to organize all
+necessary files and libraries required for developing and managing
+plugins using the Mint CLI. Below is a detailed breakdown of the various
+directories and their purposes.
+
+---
+
+## Working Directory
+
+The **Working Directory** is where the Mint CLI is placed.
+This folder contains essential components like the CLI executable,
+a data directory for libraries, the plugins directory,
+and the `api_key.txt` file used for authentication.
+
+<FileTree>
+    - plugins-mint/
+        - **mint-cli.exe**  The Mint CLI executable file
+        - data/             Directory containing required libraries and tools
+        - plugins/          Directory where all plugins are stored
+        - api_key.txt       File containing the API key for authentication
+</FileTree>
+
+---
+
+## Data Directory
+
+The **Data Directory** holds all the necessary libraries,
+the Java Development Kit (JDK), and Minecraft libraries needed
+for plugin development. It also includes the plugin template and version information.
+
+<FileTree>
+    - data/
+        - jdk/
+            - java-8/
+            - java-17/
+            - java-21/
+        - libs/
+            - Minecraft.jar
+            - MintClient.jar
+        - template/
+        - VERSION.txt
+</FileTree>
+
+---
+
+## Plugins Directory
+
+The **Plugins Directory** is where all your active plugins reside.
+Every time you download, upload, or work on a plugin using the Mint CLI,
+this directory is utilized.
+
+<FileTree>
+    - plugins/
+        - test-plugin/
+        - autofish-plugin/
+        - example-plugin/
+</FileTree>
+
+---
+
+## Plugin Folder Structure
+
+Each plugin folder follows a specific structure to ensure it can be
+built and run properly. Here’s a breakdown of the structure for an individual plugin:
+
+- The **`.vscode/`** folder contains the Visual Studio Code workspace and
+settings for opening and editing the plugin in VS Code.
+- The **`plugin.yaml`** file is the configuration file where you can
+customize the plugin’s name, description, and visibility.
+- The **`src/`** folder contains the Java source code files,
+which will be compiled into the actual plugin.
+
+<FileTree>
+    - example-plugin/
+        - .vscode/
+            - settings.json
+            - example-plugin.code-workspace
+        - **src/**
+            - com/
+                - example/
+                    - ExamplePlugin.java
+        - plugin.yaml
+</FileTree>
+
+### Key Elements of a Plugin Folder:
+1. **.vscode/**: Contains the workspace and settings to configure the plugin for development
+in Visual Studio Code.
+2. **plugin.yaml**: Defines metadata like the plugin’s name, description, and visibility.
+3. **src/**: This is where the actual plugin code is stored, organized in Java packages.
+
+

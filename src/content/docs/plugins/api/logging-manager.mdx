@@ -1,0 +1,38 @@
+---
+title: Logging Manager
+description: Docs for Logging Manager
+---
+
+import {Code} from "astro/components";
+
+The `LoggingManager` is a class that is used to log messages in the Mint Client.
+It is located in the `com.originmint.managers.LoggingManager` class.
+It can be used to log methods on screen, in chat or in the debug console.
+
+The `LoggingManager` has the following methods:
+- `log`: Logs a message to the screen and in chat. Accepts a string and a Type of Log.
+- `debug`: Logs a message to the debug console. Can take exceptions and throwables.
+- `getInstance`: Returns the instance of the `LoggingManager`.
+
+The different types of logs are:
+- `INFO`: Informational log.
+- `WARNING`: Warning log.
+- `ERROR`: Error log.
+- `SUCCESS`: Success log.
+
+This is located at `com.originmint.managers.LoggingManager.LOG_LEVEL`.
+
+This can be useful to log messages to the screen, in chat or in the debug console.
+
+<Code type={"code"} lang={"java"} title={"logging-manager.java"} code={`LoggingManager.getInstance().log("Message", LoggingManager.LOG_LEVEL.INFO);
+LoggingManager.getInstance().debug("Message", LoggingManager.LOG_LEVEL.INFO);
+`}/>
+
+You can also use the `LoggingManager` to log exceptions and throwables.
+
+<Code type={"code"} lang={"java"} title={"logging-manager.java"} code={`try {
+    // Code that may throw an exception
+} catch (Exception e) {
+    LoggingManager.getInstance().debug(e);
+}
+`}/>

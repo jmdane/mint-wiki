@@ -2,6 +2,7 @@
 title: Installing the CLI
 description: A guide on how to install the Mint Client CLI.
 ---
+import { Aside } from '@astrojs/starlight/components';
 
 The MintClient Command Line Interface (CLI) allows users to create plugins
 from their terminal or command prompt. This guide will help you download, 
@@ -103,7 +104,7 @@ mint-cli plugin libraries-download
 
 ## Step 5: More Commands
 
-Once the CLI is set up, you can begin using it to interact with the OriginMint platform. Below are some useful commands you can use:
+Once the CLI is set up, you can begin using it to interact with the Mint Client plugin system. Below are some useful commands you can use:
 
 ### **Commands:**
 - **download**: Download a plugin by ID.
@@ -129,7 +130,7 @@ Once the CLI is set up, you can begin using it to interact with the OriginMint p
   
 - To list all plugins:
   ```bash
-  mint-cli list
+  mint-cli plugin list
   ```
 
 - To delete a plugin with a specific ID:\
@@ -153,6 +154,14 @@ Once the CLI is set up, you can begin using it to interact with the OriginMint p
   with the ID of the plugin you want to create a template of.
   ```bash
   mint-cli plugin download-template --output <output_name> --id <plugin_id>
+  ```
+  <Aside type="danger">Do not download plugin's you dont trust!</Aside>
+- To create an empty plugin with a default example:\
+  Replace `<output-folder>` with the desired folder name you want,
+    and `<1.8.9 | 1.18.2 | 1.20.6>` with the version of the plugin you want to create.
+  This creates a default plugin with example code.
+  ```bash
+  mint-cli plugin create-empty --output <output-folder> --version <1.8.9 | 1.18.2 | 1.20.6>
   ```
 
 - To get help on a specific command:\

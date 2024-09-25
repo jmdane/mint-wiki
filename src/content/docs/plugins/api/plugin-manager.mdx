@@ -1,0 +1,50 @@
+---
+title: Plugin Manager
+description: Docs for Plugin Manager
+---
+
+import {Code} from "astro/components";
+
+The `PluginManager` is a class that is used to manage plugins in the Mint Client.
+It is located in the `com.originmint.managers.PluginManager` class.
+
+The `PluginManager` has the following field:
+- `PLUGIN_EVENT_BUS`: The event bus for the plugin manager.
+
+It is located at `com.originmint.plugin.eventbus.PluginEventBus`.
+
+This can be useful to register and unregister listeners for the plugin manager.
+It has a method called `register` and `unregister` that can be used to register and unregister listeners.
+
+<Code type={"code"} lang={"java"} title={"plugin-manager.java"} code={`PluginManager.getInstance().PLUGIN_EVENT_BUS.register(this);
+PluginManager.getInstance().PLUGIN_EVENT_BUS.unregister(this);
+`}/>
+
+It should be used in the `onEnable` and `onDisable` methods of the plugin entry point that inherits from `IPlugin`.
+
+<Code type={"code"} lang={"java"} title={"plugin-manager.java"} code={`@Override
+public void onEnable() {
+    PluginManager.getInstance().PLUGIN_EVENT_BUS.register(this);
+}
+
+@Override
+public void onDisable() {
+    PluginManager.getInstance().PLUGIN_EVENT_BUS.unregister(this);
+}
+`}/>
+
+You can also specify other objects to register and unregister instead of `this`.
+Any method with the `@Subscribe` annotation will be called when the event is fired in that object.
+
+<Code type={"code"} lang={"java"} title={"plugin-manager.java"} code={`FishingListener fishingListener = new FishingListener();
+
+    @Override
+    public void onEnable() {
+        PluginManager.getInstance().PLUGIN_EVENT_BUS.register(fishingListener);
+    }
+
+    @Override
+    public void onDisable() {
+        PluginManager.getInstance().PLUGIN_EVENT_BUS.unregister(fishingListener);
+    }
+`}/>
